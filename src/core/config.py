@@ -170,7 +170,11 @@ def get_openai_api_key() -> str:
 
 
 def red_openai_client_kwargs() -> dict:
-    return {"api_key": get_openai_api_key() or None}
+    kwargs: dict = {"api_key": get_openai_api_key() or None}
+    base = os.environ.get("OPENAI_BASE_URL", "").strip()
+    if base:
+        kwargs["base_url"] = base
+    return kwargs
 
 
 def red_provider_label(tier: str = "advance") -> str:
