@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>VinBank AI Security — Checkpoint 4 Deck</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --text-main: #f3f4f6;
+      --text-sub: #9ca3af;
+      --accent-red: #ef4444;
+      --accent-emerald: #10b981;
+      --accent-blue: #3b82f6;
+      --accent-amber: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 40px;
+    }
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 1280px;
+      margin-bottom: 24px;
+      padding: 12px 20px;
+      background: #161f30;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 15px; color: #60a5fa; }
+    .controls { display: flex; align-items: center; gap: 10px; }
+    .btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #1f2937;
+      color: #e5e7eb;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: #374151; border-color: #4b5563; }
+    .btn-primary { background: #2563eb; border-color: #3b82f6; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .deck-viewport {
+      width: 100%;
+      max-width: 1280px;
+      aspect-ratio: 16 / 9;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      position: relative;
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 36px 48px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      transform: scale(0.98);
+    }
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+    }
+    .slide-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .badge-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .slide-title { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.25; margin-bottom: 6px; }
+    .slide-sub { font-size: 13.5px; color: var(--text-sub); line-height: 1.4; }
+    .lottie-box { width: 68px; height: 68px; flex-shrink: 0; }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      flex: 1;
+      min-height: 0;
+      margin-bottom: 16px;
+    }
+    .card {
+      background: #131c2e;
+      border: 1px solid #1e293b;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-bar { position: absolute; top: 0; left: 14px; right: 14px; height: 3px; border-radius: 2px; }
+    .card-bar-red { background: var(--accent-red); }
+    .card-bar-amber { background: var(--accent-amber); }
+    .card-bar-violet { background: var(--accent-violet); }
+    .card-bar-blue { background: var(--accent-blue); }
+    .card-bar-green { background: var(--accent-emerald); }
+    .card-bar-indigo { background: #6366f1; }
+    .card-header { display: flex; align-items: center; gap: 8px; margin-top: 4px; margin-bottom: 8px; }
+    .card-num {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      background: #1e293b;
+      color: #94a3b8;
+    }
+    .card-title { font-size: 14px; font-weight: 700; color: #f8fafc; }
+    .card-desc { font-size: 12px; color: #94a3b8; line-height: 1.4; margin-bottom: 12px; }
+    .proof-img-wrap {
+      flex: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #2d3748;
+      background: #090d16;
+      cursor: zoom-in;
+      position: relative;
+    }
+    .proof-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .proof-tag {
+      margin-top: 10px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      background: #162033;
+      color: #64748b;
+      border: 1px solid #1e293b;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .takeaway-bar {
+      background: #131c2e;
+      border: 1px solid #1e293b;
+      border-left: 4px solid var(--accent-blue);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .takeaway-bar-red { border-left-color: var(--accent-red); }
+    .takeaway-bar-green { border-left-color: var(--accent-emerald); }
+    .takeaway-lead { font-weight: 700; text-transform: uppercase; font-size: 11px; }
+    .takeaway-lead-red { color: #f87171; }
+    .takeaway-lead-green { color: #34d399; }
+
+    /* Modal for Image Zoom */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 24px;
+    }
+    .modal.active { opacity: 1; pointer-events: auto; }
+    .modal img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 12px;
+      border: 1px solid #374151;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-bar">
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>VinBank AI Security — Checkpoint 4 Deck</span>
+    </div>
+    <div class="controls">
+      <button class="btn" id="btnPrev">◀ Trước</button>
+      <span id="slideIndicator" style="font-size: 13px; font-weight: 700; font-family: monospace; color: #94a3b8;">1 / 2</span>
+      <button class="btn btn-primary" id="btnNext">Tiếp ▶</button>
+      <button class="btn" id="btnReplay">↺ Replay</button>
+    </div>
+  </div>
+
+  <div class="deck-viewport">
+    <!-- Slide 1: Problem -->
+    <div class="slide active" id="slide1">
+      <div class="slide-header">
+        <div>
+          <span class="badge badge-red">Checkpoint 4 · Vấn Đề Red Team</span>
+          <h2 class="slide-title">Ảo Tưởng System Prompt: Bot Bị Xuyên Thủng 100% Bởi 5 Đòn Tấn Công</h2>
+          <p class="slide-sub">Chỉ dựa vào câu dặn "không tiết lộ bí mật" trong system prompt khiến bot sập ngay lập tức trước các kỹ thuật khai thác ngữ cảnh nâng cao</p>
+        </div>
+        <div class="lottie-box" id="lottie1"></div>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-bar card-bar-red"></div>
+          <div class="card-header"><span class="card-num">01</span><h4 class="card-title">5 Đòn Adversarial Prompt</h4></div>
+          <p class="card-desc">Completion, Translation (JSON), kịch bản cứu hộ (Hypothetical), xác nhận SEC-2024 và leo thang nhiều bước.</p>
+          <div class="proof-img-wrap" onclick="openZoom('assets/proof_s5_owasp_llm.png')">
+            <img class="proof-img" src="assets/proof_s5_owasp_llm.png" alt="OWASP Analysis">
+          </div>
+          <div class="proof-tag">OWASP Top 10 for LLM (LLM01 / LLM02)</div>
+        </div>
+        <div class="card">
+          <div class="card-bar card-bar-amber"></div>
+          <div class="card-header"><span class="card-num">02</span><h4 class="card-title">Sụp Đổ 100% — Lộ Cả 3 Bí Mật</h4></div>
+          <p class="card-desc">Bot red_default không Guardrails phun sạch mật khẩu admin123, sk-vinbank-secret-2024, db_host ngay lập tức.</p>
+          <div class="proof-img-wrap" onclick="openZoom('assets/proof_s5_red_leak.png')">
+            <img class="proof-img" src="assets/proof_s5_red_leak.png" alt="Red Default Leaked">
+          </div>
+          <div class="proof-tag">outputs/unsafe_attack_result.json · 5/5 Leaks</div>
+        </div>
+        <div class="card">
+          <div class="card-bar card-bar-violet"></div>
+          <div class="card-header"><span class="card-num">03</span><h4 class="card-title">Bất Lực Trước Mã Hóa & LRL</h4></div>
+          <p class="card-desc">Khi dùng tiếng Latin, Esperanto hoặc In-Context Cipher (tiếng hiếm Njerep), bộ lọc Regex tĩnh L1 bị qua mặt hoàn toàn.</p>
+          <div class="proof-img-wrap" onclick="openZoom('assets/proof_s1_unicode.png')">
+            <img class="proof-img" src="assets/proof_s1_unicode.png" alt="Unicode & Cipher Bypass">
+          </div>
+          <div class="proof-tag">Cross-Lingual & Cipher Bypass · detect_injection = False</div>
+        </div>
+      </div>
+      <div class="takeaway-bar takeaway-bar-red">
+        <span class="takeaway-lead takeaway-lead-red">BÀI HỌC CỐT LÕI:</span>
+        <span>System prompt KHÔNG PHẢI là ranh giới an ninh. Mô hình ngôn ngữ tự nhiên không thể phân biệt giữa luật hệ thống và chỉ dẫn của kẻ tấn công nếu thiếu Guardrails chuyên dụng.</span>
+      </div>
+    </div>
+
+    <!-- Slide 2: Solution -->
+    <div class="slide" id="slide2">
+      <div class="slide-header">
+        <div>
+          <span class="badge badge-green">Checkpoint 4 · Giải Pháp Defense-in-Depth</span>
+          <h2 class="slide-title">Kiến Trúc 4 Lớp: Chặn Đứng 100% Đòn Tấn Công Với NeMo Guardrails</h2>
+          <p class="slide-sub">Kết hợp tốc độ của Regex tĩnh với trí tuệ ngữ nghĩa đa ngôn ngữ của NeMo Rails — Khóa chặt cả cổng Input lẫn Output</p>
+        </div>
+        <div class="lottie-box" id="lottie2"></div>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-bar card-bar-blue"></div>
+          <div class="card-header"><span class="card-num">L1-2</span><h4 class="card-title">Cổng Vào: Regex + NeMo Rails</h4></div>
+          <p class="card-desc">L1 lọc nhanh injection quen thuộc; L2 NeMo chạy self check input (LLM) phát hiện kịch bản giả mạo & tiếng lạ.</p>
+          <div class="proof-img-wrap" onclick="openZoom('assets/proof_s6_guards_blocked.png')">
+            <img class="proof-img" src="assets/proof_s6_guards_blocked.png" alt="Guards Blocked Evidence">
+          </div>
+          <div class="proof-tag">NeMo Guardrails · input rail: self check input</div>
+        </div>
+        <div class="card">
+          <div class="card-bar card-bar-green"></div>
+          <div class="card-header"><span class="card-num">L3-4</span><h4 class="card-title">Cổng Ra: Redact + De-obfuscate</h4></div>
+          <p class="card-desc">L3 che giấu [REDACTED]; L4 tự động giải mã Base64, Hex, ROT13, đảo ngược chuỗi để triệt tiêu mã hóa lén lút.</p>
+          <div class="proof-img-wrap" onclick="openZoom('assets/proof_s6_defense_scorecard.png')">
+            <img class="proof-img" src="assets/proof_s6_defense_scorecard.png" alt="Defense Scorecard">
+          </div>
+          <div class="proof-tag">Colang 1.0 + vinbank_check_output_leak</div>
+        </div>
+        <div class="card">
+          <div class="card-bar card-bar-indigo"></div>
+          <div class="card-header"><span class="card-num">PASS</span><h4 class="card-title">Nghiệm Thu Toàn Diện: 0/5 Rò Rỉ</h4></div>
+          <p class="card-desc">Red Advance giữ vững an toàn 100%. Báo cáo lab_report.md ghi nhận technical_failure: False, đạt điểm tuyệt đối.</p>
+          <div class="proof-img-wrap" onclick="openZoom('assets/proof_s6_lab_report.png')">
+            <img class="proof-img" src="assets/proof_s6_lab_report.png" alt="Lab Report">
+          </div>
+          <div class="proof-tag">outputs/lab_report.md · Grade: 100% PASS</div>
+        </div>
+      </div>
+      <div class="takeaway-bar takeaway-bar-green">
+        <span class="takeaway-lead takeaway-lead-green">GIÁ TRỊ CHIẾN LƯỢC:</span>
+        <span>Defense-in-Depth đa tầng (L1->L4) biến mô hình LLM từ "mềm yếu dễ bị lừa" thành hệ thống phòng thủ kiên cố đạt chuẩn ngân hàng.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="zoomModal" onclick="closeZoom()">
+    <img id="zoomImg" src="" alt="Zoomed Proof">
+  </div>
+
+  <script>
+    const lottieBreach = {"v": "5.12.2", "fr": 60, "ip": 0, "op": 120, "w": 120, "h": 120, "nm": "CP4_Breach_Alert", "ddd": 0, "assets": [], "layers": [{"ddd": 0, "ind": 1, "ty": 4, "nm": "Ripple", "sr": 1, "ks": {"o": {"a": 1, "k": [{"t": 0, "s": [80], "e": [0], "o": {"x": [0.4], "y": [0.0]}, "i": {"x": [0.2], "y": [1.0]}}, {"t": 60, "s": [0]}]}, "r": {"a": 0, "k": 0}, "p": {"a": 0, "k": [60, 60, 0]}, "a": {"a": 0, "k": [0, 0, 0]}, "s": {"a": 1, "k": [{"t": 0, "s": [30, 30, 100], "e": [120, 120, 100], "o": {"x": [0.4, 0.4, 0.4], "y": [0.0, 0.0, 0.0]}, "i": {"x": [0.2, 0.2, 0.2], "y": [1.0, 1.0, 1.0]}}, {"t": 60, "s": [120, 120, 100]}]}}, "ao": 0, "shapes": [{"ty": "gr", "nm": "Circle", "it": [{"ty": "el", "s": {"a": 0, "k": [80, 80]}, "p": {"a": 0, "k": [0, 0]}, "nm": "P"}, {"ty": "st", "c": {"a": 0, "k": [0.86, 0.15, 0.15]}, "o": {"a": 0, "k": 100}, "w": {"a": 0, "k": 3}, "nm": "S"}, {"ty": "tr", "p": {"a": 0, "k": [0, 0]}, "a": {"a": 0, "k": [0, 0]}, "s": {"a": 0, "k": [100, 100]}, "r": {"a": 0, "k": 0}, "o": {"a": 0, "k": 100}}]}], "ip": 0, "op": 120, "st": 0, "bm": 0}, {"ddd": 0, "ind": 2, "ty": 4, "nm": "Core", "sr": 1, "ks": {"o": {"a": 0, "k": 100}, "r": {"a": 1, "k": [{"t": 0, "s": [0], "e": [45], "o": {"x": [0.4], "y": [0.0]}, "i": {"x": [0.2], "y": [1.0]}}, {"t": 60, "s": [45]}, {"t": 60, "s": [45], "e": [90], "o": {"x": [0.4], "y": [0.0]}, "i": {"x": [0.2], "y": [1.0]}}, {"t": 120, "s": [90]}]}, "p": {"a": 0, "k": [60, 60, 0]}, "a": {"a": 0, "k": [0, 0, 0]}, "s": {"a": 1, "k": [{"t": 0, "s": [90, 90, 100], "e": [105, 105, 100], "o": {"x": [0.4, 0.4, 0.4], "y": [0.0, 0.0, 0.0]}, "i": {"x": [0.2, 0.2, 0.2], "y": [1.0, 1.0, 1.0]}}, {"t": 30, "s": [105, 105, 100]}, {"t": 30, "s": [105, 105, 100], "e": [90, 90, 100], "o": {"x": [0.4, 0.4, 0.4], "y": [0.0, 0.0, 0.0]}, "i": {"x": [0.2, 0.2, 0.2], "y": [1.0, 1.0, 1.0]}}, {"t": 60, "s": [90, 90, 100]}]}}, "ao": 0, "shapes": [{"ty": "gr", "nm": "Diamond", "it": [{"ty": "rc", "d": 1, "s": {"a": 0, "k": [46, 46]}, "p": {"a": 0, "k": [0, 0]}, "r": {"a": 0, "k": 10}, "nm": "R"}, {"ty": "fl", "c": {"a": 0, "k": [0.99, 0.95, 0.95]}, "o": {"a": 0, "k": 100}, "nm": "F"}, {"ty": "st", "c": {"a": 0, "k": [0.86, 0.15, 0.15]}, "o": {"a": 0, "k": 100}, "w": {"a": 0, "k": 4}, "nm": "S"}, {"ty": "tr", "p": {"a": 0, "k": [0, 0]}, "a": {"a": 0, "k": [0, 0]}, "s": {"a": 0, "k": [100, 100]}, "r": {"a": 0, "k": 0}, "o": {"a": 0, "k": 100}}]}], "ip": 0, "op": 120, "st": 0, "bm": 0}]};
+    const lottieNeMo = {"v": "5.12.2", "fr": 60, "ip": 0, "op": 120, "w": 120, "h": 120, "nm": "CP4_NeMo_Shield", "ddd": 0, "assets": [], "layers": [{"ddd": 0, "ind": 1, "ty": 4, "nm": "Perimeter", "sr": 1, "ks": {"o": {"a": 0, "k": 100}, "r": {"a": 1, "k": [{"t": 0, "s": [0]}, {"t": 120, "s": [360]}]}, "p": {"a": 0, "k": [60, 60, 0]}, "a": {"a": 0, "k": [0, 0, 0]}, "s": {"a": 0, "k": [100, 100, 100]}}, "ao": 0, "shapes": [{"ty": "gr", "nm": "Circle", "it": [{"ty": "el", "s": {"a": 0, "k": [86, 86]}, "p": {"a": 0, "k": [0, 0]}, "nm": "E"}, {"ty": "st", "c": {"a": 0, "k": [0.06, 0.72, 0.51]}, "o": {"a": 0, "k": 100}, "w": {"a": 0, "k": 3}, "d": [{"n": "d", "v": {"a": 0, "k": 10}}, {"n": "g", "v": {"a": 0, "k": 6}}], "nm": "S"}, {"ty": "tr", "p": {"a": 0, "k": [0, 0]}, "a": {"a": 0, "k": [0, 0]}, "s": {"a": 0, "k": [100, 100]}, "r": {"a": 0, "k": 0}, "o": {"a": 0, "k": 100}}]}], "ip": 0, "op": 120, "st": 0, "bm": 0}, {"ddd": 0, "ind": 2, "ty": 4, "nm": "ShieldCore", "sr": 1, "ks": {"o": {"a": 0, "k": 100}, "r": {"a": 0, "k": 0}, "p": {"a": 0, "k": [60, 60, 0]}, "a": {"a": 0, "k": [0, 0, 0]}, "s": {"a": 1, "k": [{"t": 0, "s": [92, 92, 100], "e": [104, 104, 100], "o": {"x": [0.4, 0.4, 0.4], "y": [0.0, 0.0, 0.0]}, "i": {"x": [0.2, 0.2, 0.2], "y": [1.0, 1.0, 1.0]}}, {"t": 60, "s": [104, 104, 100]}, {"t": 60, "s": [104, 104, 100], "e": [92, 92, 100], "o": {"x": [0.4, 0.4, 0.4], "y": [0.0, 0.0, 0.0]}, "i": {"x": [0.2, 0.2, 0.2], "y": [1.0, 1.0, 1.0]}}, {"t": 120, "s": [92, 92, 100]}]}}, "ao": 0, "shapes": [{"ty": "gr", "nm": "Core", "it": [{"ty": "rc", "d": 1, "s": {"a": 0, "k": [48, 54]}, "p": {"a": 0, "k": [0, 0]}, "r": {"a": 0, "k": 12}, "nm": "R"}, {"ty": "fl", "c": {"a": 0, "k": [0.94, 0.99, 0.96]}, "o": {"a": 0, "k": 100}, "nm": "F"}, {"ty": "st", "c": {"a": 0, "k": [0.08, 0.5, 0.24]}, "o": {"a": 0, "k": 100}, "w": {"a": 0, "k": 3.5}, "nm": "S"}, {"ty": "tr", "p": {"a": 0, "k": [0, 0]}, "a": {"a": 0, "k": [0, 0]}, "s": {"a": 0, "k": [100, 100]}, "r": {"a": 0, "k": 0}, "o": {"a": 0, "k": 100}}]}], "ip": 0, "op": 120, "st": 0, "bm": 0}]};
+    let cur = 0;
+    const slides = [document.getElementById('slide1'), document.getElementById('slide2')];
+    const indicator = document.getElementById('slideIndicator');
+
+    function showSlide(idx) {
+      slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+      cur = idx;
+      indicator.textContent = (idx + 1) + ' / ' + slides.length;
+    }
+
+    document.getElementById('btnPrev').onclick = () => showSlide((cur - 1 + slides.length) % slides.length);
+    document.getElementById('btnNext').onclick = () => showSlide((cur + 1) % slides.length);
+    document.getElementById('btnReplay').onclick = () => { showSlide(0); };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') showSlide((cur + 1) % slides.length);
+      if (e.key === 'ArrowLeft') showSlide((cur - 1 + slides.length) % slides.length);
+      if (e.key === 'Escape') closeZoom();
+    });
+
+    window.addEventListener('load', () => {
+      if (window.lottie) {
+        window.lottie.loadAnimation({ container: document.getElementById('lottie1'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieBreach });
+        window.lottie.loadAnimation({ container: document.getElementById('lottie2'), renderer: 'svg', loop: true, autoplay: true, animationData: lottieNeMo });
+      }
+    });
+
+    function openZoom(src) {
+      document.getElementById('zoomImg').src = src;
+      document.getElementById('zoomModal').classList.add('active');
+    }
+    function closeZoom() {
+      document.getElementById('zoomModal').classList.remove('active');
+    }
+  </script>
+</body>
+</html>
